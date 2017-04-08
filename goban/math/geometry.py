@@ -5,7 +5,7 @@ Created on Wed Apr  5 17:35:01 2017
 
 @author: taras
 """
-from math import atan2
+from math import atan2, sqrt
 
 def lineCoefs(p1, p2):
     A = (p1[1] - p2[1])
@@ -50,3 +50,19 @@ def sqDist(point1, point2):
 def sortPointsCW(points):
     center = meanPoint(points);
     return sorted(points, key=lambda p: atan2(p[1] - center[1], p[0] - center[0]));
+
+def quadArea(cornerPoints):
+    return 0.5*abs(cornerPoints[0][0]*cornerPoints[1][1] + cornerPoints[1][0]*cornerPoints[2][1] + cornerPoints[2][0]*cornerPoints[3][1] + cornerPoints[3][0]*cornerPoints[0][1] - cornerPoints[1][0]*cornerPoints[0][1] - cornerPoints[2][0]*cornerPoints[1][1] - cornerPoints[3][0]*cornerPoints[2][1] - cornerPoints[0][0]*cornerPoints[3][1]);
+
+#def interAngleCos(line1, line2):
+def interAngleCos(line0point0, line0point1, line1point0, line1point1):
+    #x1,y1,x2,y2 = line1[0];
+    #ox1,oy1,ox2,oy2 = line2[0];
+    x1, y1 = line0point0;
+    x2, y2 = line0point1;
+    ox1, oy1 = line1point0;
+    ox2, oy2 = line1point1;
+    vec1 = (x2 - x1, y2 - y1);
+    vec2 = (ox2 - ox1, oy2 - oy1);
+    dotProduct = vec1[0]*vec2[0] + vec1[1]*vec2[1];
+    return dotProduct / (sqrt(vec1[0]*vec1[0] + vec1[1]*vec1[1])*sqrt(vec2[0]*vec2[0] + vec2[1]*vec2[1]));
