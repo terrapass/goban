@@ -30,6 +30,7 @@ PADDING_HEIGHT = int(RECTIFIED_SIZE[0] / (2*config.BOARD_HEIGHT));
 
 topdownImg = rectifyPerspective(img, cornerPoints, RECTIFIED_SIZE, PADDING_HEIGHT, PADDING_WIDTH);
 popupImage("Rectified perspective", topdownImg, True);
+cv2.waitKey();
 
 # Convert topdown image to grayscale
 topdownImg = bgrToGray(topdownImg);
