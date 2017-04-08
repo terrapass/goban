@@ -6,6 +6,8 @@ Created on Wed Apr  5 19:35:12 2017
 @author: taras
 """
 
+from enum import Enum;
+
 # Whether to use camera or load image from file for labelling and recognition
 USE_CAMERA = False;
 
@@ -26,3 +28,10 @@ TRAINING_ADD_FLIPS = True;
 VALIDATION_SET_SIZE = 1000;
 
 LIVE_VALIDATION = True;
+
+class CornerDetectionStrategy:
+    MANUAL = 0;
+    GENETIC = 1;
+    EXPERIMENTAL = 2;
+
+CORNER_DETECTION_STRATEGY = CornerDetectionStrategy.MANUAL;

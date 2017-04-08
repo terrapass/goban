@@ -4,7 +4,6 @@
 import cv2;
 
 from goban.io import loadNeuralNetwork;
-from goban.ui.dialogs import AskCornersDialog;
 from goban.ui.views import ConsoleBoardView;
 from goban.vision.operations import rectifyPerspective;
 from goban.ui.cv import popupImage;
@@ -12,12 +11,19 @@ from goban.recognition import NeuralTopdownFixedSizeBoardRecognizer;
 from goban.vision.operations import bgrToGray, getChannel, bgrToHsv;
 
 import config
-from mainutils import getInputImage
+from mainutils import getInputImage, getCornerDetector, getBoardRecognizer
 
 img = getInputImage();
+#resizedImg = cv2.resize(img, (160, 120));
+cornerPoints = getCornerDetector().findBoardCorners(img);
+# TODO: Encapsulate selected quadrangle display
+cornerImg = img.copy();
+for i in range(0, len(cornerPoints)):
+    n = (i + 1) % 4;
+    cv2.line(cornerImg, cornerPoints[i], cornerPoints[n], (0, 255, 0), 2);
+#popupImage("Selected quadrangle", cornerImg, True);
 
-cornerPoints = AskCornersDialog(img, (0, 255, 0)).run()
-
+# TODO: Encapsulate and avoid code duplication w/ genetic.py
 RECTIFIED_SIZE = (config.BOARD_HEIGHT * config.FRAGMENT_SIZE[0], config.BOARD_WIDTH * config.FRAGMENT_SIZE[1]);
 PADDING_WIDTH = int(RECTIFIED_SIZE[1] / (2*config.BOARD_WIDTH));
 PADDING_HEIGHT = int(RECTIFIED_SIZE[0] / (2*config.BOARD_HEIGHT));
@@ -32,8 +38,7 @@ popupImage("Rectified perspective", topdownImg, True);
 topdownImg = bgrToGray(topdownImg);
 #popupImage("Rectified perspective (grayscale)", topdownImg, True);
 
-network = loadNeuralNetwork(config.NETWORK_FILENAME);
-recognizer = NeuralTopdownFixedSizeBoardRecognizer(network, config.BOARD_WIDTH, config.BOARD_HEIGHT);
+recognizer = getBoardRecognizer();
 board, confidence = recognizer.recognize(topdownImg);
 
 print("Recognized the following board position with avg. confidence %f" % confidence);
